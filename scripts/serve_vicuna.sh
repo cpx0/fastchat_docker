@@ -24,44 +24,49 @@ function main() {
         done
 
         if [ "$FLG_M" = "TRUE" ]; then
-            if [ $GPUS >= 0 ]; then
-                if [ "$FLG_8" = "TRUE" ]; then
-                    if [ "$FLG_O" = "TRUE" ]; then
+            if [ "$FLG_G" = "TRUE" ]; then
+                if [ "$GPUS" > 0 ]; then
+                    if [ "$FLG_8" = "TRUE" ]; then
+                        if [ "$FLG_O" = "TRUE" ]; then
+                            echo -e \
+                                "python -m fastchat.serve.cli --model-path $MODEL --num-gpus $GPUS --load-8bit --cpu-offloading"
+                            python -m fastchat.serve.cli \
+                                --model-path $MODEL \
+                                --num-gpus $GPUS \
+                                --load-8bit \
+                                --cpu-offloading
+                        else
+                            echo -e \
+                                "python -m fastchat.serve.cli --model-path $MODEL --num-gpus $GPUS --load-8bit"
+                            python -m fastchat.serve.cli \
+                                --model-path $MODEL \
+                                --num-gpus $GPUS \
+                                --load-8bit
+                        fi
+                    elif [ "$FLG_O" = "TRUE" ]; then
                         echo -e \
-                            "python -m fastchat.serve.cli --model-path $MODEL --num-gpus $GPUS --load-8bit --cpu-offloading"
+                            "python -m fastchat.serve.cli --model-path $MODEL --num-gpus $GPUS --cpu-offloading"
                         python -m fastchat.serve.cli \
                             --model-path $MODEL \
                             --num-gpus $GPUS \
-                            --load-8bit \
                             --cpu-offloading
                     else
                         echo -e \
-                            "python -m fastchat.serve.cli --model-path $MODEL --num-gpus $GPUS --load-8bit"
+                            "python -m fastchat.serve.cli --model-path $MODEL --num-gpus $GPUS"
                         python -m fastchat.serve.cli \
                             --model-path $MODEL \
-                            --num-gpus $GPUS \
-                            --load-8bit
+                            --num-gpus $GPUS
                     fi
-                elif [ "$FLG_O" = "TRUE" ]; then
+                elif [ "$GPUS" = 0 ]; then
                     echo -e \
-                        "python -m fastchat.serve.cli --model-path $MODEL --num-gpus $GPUS --cpu-offloading"
+                        "python -m fastchat.serve.cli --model-path $MODEL --device cpu"
                     python -m fastchat.serve.cli \
                         --model-path $MODEL \
-                        --num-gpus $GPUS \
-                        --cpu-offloading
+                        --device cpu
                 else
-                    echo -e \
-                        "python -m fastchat.serve.cli --model-path $MODEL --num-gpus $GPUS"
-                    python -m fastchat.serve.cli \
-                        --model-path $MODEL \
-                        --num-gpus $GPUS
+                    echo "-g(GPU_NUMS) option must be nonnegative integer" 1>&2
+                    exit 1
                 fi
-            elif [ $GPUS = 0 ]; then
-                echo -e \
-                    "python -m fastchat.serve.cli --model-path $MODEL --device cpu"
-                python -m fastchat.serve.cli \
-                    --model-path $MODEL \
-                    --device cpu
             else
                 echo "-g(GPU_NUMS) option must be nonnegative integer" 1>&2
                 exit 1
