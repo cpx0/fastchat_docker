@@ -40,6 +40,7 @@ fastchat_docker
 ```terminal:terminal
 git clone https://github.com/cpx0/fastchat_docker.git
 cd fastchat_docker
+chmod 755 ./docker/*.sh ./scripts/*.sh
 ```
 
 ```terminal:terminal
